@@ -32,9 +32,9 @@ connectDB()
 
 // SOCKET CONNECTION
 io.on('connection', (socket) => {
-	socket.on('join-room', (roomId) => {
+	socket.on('join-room', (roomId, userId) => {
 		socket.join(roomId)
-		socket.to(roomId).broadcast.emit('user-connected')
+		socket.to(roomId).broadcast.emit('user-connected', userId)
 	})
 })
 

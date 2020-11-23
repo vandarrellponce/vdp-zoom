@@ -19,14 +19,16 @@ const addVideoStream = (video, stream) => {
 	videoGrid.append(video)
 }
 
-const connectToNewUser = () => {
-	console.log('there is a new user')
+const connectToNewUser = (userId) => {
+	console.log(userId)
 }
 
-// SOCKET CONNECTION
-socket.emit('join-room', roomId)
-socket.on('user-connected', () => {
-	console.log('there is a new user')
+// PEER AND SOCKET CONNECTIONS
+peer.on('open', (userId) => {
+	socket.emit('join-room', roomId, userId)
+})
+socket.on('user-connected', (userId) => {
+	connectToNewUser(userId)
 })
 
 const main = async () => {

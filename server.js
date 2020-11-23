@@ -9,6 +9,7 @@ import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import http from 'http'
 import { v4 as uuidv4 } from 'uuid'
+import { Server } from 'socket.io'
 
 // APP CONFIG
 dotenv.config()
@@ -17,16 +18,25 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(cors())
 const server = http.Server(app)
+const io = new Server(server)
 
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'))
 
 // DATBASE CONNECTION
 connectDB()
 
+// SOCKET CONNECTION
+io.on('connection', (socket) => {
+	socket.on('join-room', (roomId) => {
+		socket.join(roomId)
+		socket.to(roomId).broadcast.emit('user-connected')
+	})
+})
+
 // VIEW ENGINE
 app.set('view engine', 'ejs')
 
-// PUBLIC FOLDER
+// SET UP APP
 app.use(express.static('public'))
 
 // ROUTES

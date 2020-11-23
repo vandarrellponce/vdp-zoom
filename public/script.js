@@ -1,3 +1,5 @@
+const socket = io('/')
+
 // DOM Elements
 const myVideo = document.createElement('video')
 myVideo.muted = true
@@ -11,6 +13,16 @@ const addVideoStream = (video, stream) => {
 	})
 	videoGrid.append(video)
 }
+
+const connectToNewUser = () => {
+	console.log('there is a new user')
+}
+
+// SOCKET CONNECTION
+socket.emit('join-room', roomId)
+socket.on('user-connected', () => {
+	console.log('there is a new user')
+})
 
 const main = async () => {
 	const stream = await navigator.mediaDevices.getUserMedia({

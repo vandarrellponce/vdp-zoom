@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { config } from 'dotenv'
+import dotenv from 'dotenv'
 import path from 'path'
 import userRoutes from './routes/userRoutes.js'
 import errorHandler from './middlewares/errorHandler.js'
@@ -14,7 +14,7 @@ import { PeerServer } from 'peer'
 const peerServer = PeerServer({ debug: true })
 
 // APP CONFIG
-config()
+dotenv.config()
 const app = express()
 app.use(cookieParser())
 app.use(express.json())

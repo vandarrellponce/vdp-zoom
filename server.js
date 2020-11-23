@@ -10,6 +10,7 @@ import cookieParser from 'cookie-parser'
 import http from 'http'
 import { v4 as uuidv4 } from 'uuid'
 import { Server } from 'socket.io'
+import { ExpressPeerServer } from 'peer'
 
 // APP CONFIG
 dotenv.config()
@@ -17,8 +18,12 @@ const app = express()
 app.use(cookieParser())
 app.use(express.json())
 app.use(cors())
+
 const server = http.Server(app)
 const io = new Server(server)
+
+const peerServer = ExpressPeerServer(server, { debug: true })
+app.use('/peerjs', peerServer)
 
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'))
 

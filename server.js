@@ -1,39 +1,34 @@
-const express = require('express')
-const cors = require('cors')
-const dotenv = require('dotenv')
-const path = require('path')
-/* const userRoutes = require('./routes/userRoutes.js')
-const errorHandler = require('./middlewares/errorHandler.js')
-const connectDB = require('./config/db.js') */
-const morgan = require('morgan')
-const cookieParser = require('cookie-parser')
-const http = require('http')
-const { v4: uuidv4 } = require('uuid')
-
-/* const { ExpressPeerServer } = require('peer') */
-
-const { PeerServer } = require('peer')
+import express from 'express'
+import cors from 'cors'
+import { config } from 'dotenv'
+import path from 'path'
+import userRoutes from './routes/userRoutes.js'
+import errorHandler from './middlewares/errorHandler.js'
+import connectDB from './config/db.js'
+import morgan from 'morgan'
+import cookieParser from 'cookie-parser'
+import http from 'http'
+import { v4 as uuidv4 } from 'uuid'
+import { Server } from 'socket.io'
+import { PeerServer } from 'peer'
 const peerServer = PeerServer({ debug: true })
 
 // APP CONFIG
-dotenv.config()
+config()
 const app = express()
 app.use(cookieParser())
 app.use(express.json())
 app.use(cors())
 
 const server = http.Server(app)
-const io = require('socket.io')(server)
+const io = new Server(server)
 
-/* const peerServer = ExpressPeerServer(server, {
-	debug: true,
-}) */
 app.use('/peerjs', peerServer)
 
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'))
 
 // DATBASE CONNECTION
-/* connectDB() */
+connectDB()
 
 // SOCKET CONNECTION
 io.on('connection', (socket) => {
@@ -58,16 +53,17 @@ app.get('/:roomId', (req, res) => {
 	res.render('room', { roomId: req.params.roomId })
 })
 
-/* app.use('/api/users', userRoutes)
+app.use('/api/users', userRoutes)
 
+const __dirname = path.resolve()
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
 app.all('*', (req, res) =>
 	res.status(404).send({ message: `Not found - ${req.originalUrl}` })
-) */
+)
 
 // ERROR HANDLER
-/* app.use(errorHandler) */
+app.use(errorHandler)
 
 // PORT CONFIG
 const port = process.env.PORT || 5005

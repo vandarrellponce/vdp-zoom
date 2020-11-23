@@ -1,9 +1,5 @@
 const socket = io('/')
-const peer = new Peer(undefined, {
-	path: '/',
-	host: '/',
-	port: '5001',
-})
+const peer = new Peer()
 let myVideoStream
 
 // DOM Elements

@@ -1,4 +1,9 @@
 const socket = io('/')
+const peer = new Peer(undefined, {
+	path: '/peerjs',
+	host: '/',
+	port: '5001',
+})
 
 // DOM Elements
 const myVideo = document.createElement('video')

@@ -1,5 +1,9 @@
 const socket = io('/')
-const peer = new Peer()
+const peer = new Peer({
+	host: '/',
+	path: '/',
+	port: '5002',
+})
 let myVideoStream
 
 // DOM Elements
@@ -25,10 +29,16 @@ navigator.mediaDevices
 		peer.on('call', (call) => {
 			call.answer(stream)
 			const video = document.createElement('video')
-			call.on('stream', (userVideoStream) => {
-				console.log('on stream 2')
-				addVideoStream(video, userVideoStream)
-			})
+			call.on(
+				'stream',
+				(userVideoStream) => {
+					console.log('on stream 2')
+					addVideoStream(video, userVideoStream)
+				},
+				function (err) {
+					console.log('Failed to get local stream', err)
+				}
+			)
 		})
 
 		socket.on('user-connected', (userId) => {
@@ -45,14 +55,19 @@ const addVideoStream = (video, stream) => {
 	videoGrid.append(video)
 }
 
-const connectToNewUser = (userId, stream) => {
-	const call = peer.call(userId, stream)
-	console.log(call)
+const connectToNewUser = async (userId, stream) => {
+	const call = await peer.call(userId, stream)
 	const video = document.createElement('video')
-	call.on('stream', (userVideoStream) => {
-		console.log('on stream 1')
-		addVideoStream(video, userVideoStream)
-	})
+	call.on(
+		'stream',
+		(userVideoStream) => {
+			console.log('on stream 1')
+			addVideoStream(video, userVideoStream)
+		},
+		function (err) {
+			console.log('Failed to get local stream', err)
+		}
+	)
 
-	console.log('hey')
+	console.log('connect to new user')
 }

@@ -1,9 +1,9 @@
 const socket = io('/')
-const peer = new Peer({
-	host: '/',
+const peer = new Peer(/* undefined, {
 	path: '/',
-	port: '5002',
-})
+	host: '/',
+	port: 5002,
+} */)
 let myVideoStream
 
 // DOM Elements
@@ -13,8 +13,8 @@ const videoGrid = document.getElementById('video-grid')
 
 // PEER AND SOCKET CONNECTIONS
 peer.on('open', (userId) => {
-	console.log(userId)
 	socket.emit('join-room', roomId, userId)
+	console.log('peer-on-open', userId)
 })
 
 navigator.mediaDevices
@@ -27,12 +27,13 @@ navigator.mediaDevices
 		addVideoStream(myVideo, stream)
 
 		peer.on('call', (call) => {
+			console.log('peer-on-call')
 			call.answer(stream)
 			const video = document.createElement('video')
 			call.on(
 				'stream',
 				(userVideoStream) => {
-					console.log('on stream 2')
+					console.log('call-on-stream 1')
 					addVideoStream(video, userVideoStream)
 				},
 				function (err) {
@@ -61,7 +62,7 @@ const connectToNewUser = async (userId, stream) => {
 	call.on(
 		'stream',
 		(userVideoStream) => {
-			console.log('on stream 1')
+			console.log('call-on-stream 2')
 			addVideoStream(video, userVideoStream)
 		},
 		function (err) {

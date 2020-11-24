@@ -90,3 +90,8 @@ video {
 	border: none;
 	color: #f5f5f5;
 }
+
+.messages {
+	color: white;
+	list-style: none;
+}

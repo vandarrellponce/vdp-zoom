@@ -73,6 +73,63 @@ const connectToNewUser = async (userId, stream) => {
 	console.log('connect to new user')
 }
 
+const scrollToBottom = () => {
+	let chatWindow = $('.main__chat__window')
+	chatWindow.scrollTop(chatWindow.prop('scrollHeight'))
+}
+
+const setMuteButton = () => {
+	const html = `<i class="fas fa-microphone"></i>
+    <span>Mute</span>
+    `
+	document.querySelector('.main__mute__button').innerHTML = html
+}
+
+const setUnmuteButton = () => {
+	const html = `<i class="unmute fas fa-microphone-slash"></i>
+    <span>Unmute</span>
+    `
+	document.querySelector('.main__mute__button').innerHTML = html
+}
+
+const toggleAudio = () => {
+	const enabled = myVideoStream.getAudioTracks()[0].enabled
+	if (enabled) {
+		myVideoStream.getAudioTracks()[0].enabled = false
+		setUnmuteButton()
+	} else {
+		myVideoStream.getAudioTracks()[0].enabled = true
+		setMuteButton()
+	}
+}
+
+const setPlayVideo = () => {
+	const html = `<i class="unmute fas fa-video-slash"></i>
+    <span>Play Video</>
+    `
+	document.querySelector('.main__video__button').innerHTML = html
+}
+
+const setStopVideo = () => {
+	const html = `<i class="fas fa-video"></i>
+    <span>Stop Video</>
+    `
+	document.querySelector('.main__video__button').innerHTML = html
+}
+
+const toggleVideo = () => {
+	let enabled = myVideoStream.getVideoTracks()[0].enabled
+	if (enabled) {
+		myVideoStream.getVideoTracks()[0].enabled = false
+		setPlayVideo()
+	} else {
+		myVideoStream.getVideoTracks()[0].enabled = true
+		setStopVideo()
+	}
+}
+
+// MESSAGING
+
 let text = $('input')
 
 $('html').keydown((e) => {
@@ -87,4 +144,5 @@ socket.on('createMessage', (message) => {
 	$('.messages').append(
 		`<li class='message' ><b style="color: skyblue">Participant</b><br/>${message}</li>`
 	)
+	scrollToBottom()
 })

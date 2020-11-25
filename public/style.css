@@ -77,6 +77,7 @@ video {
 
 .main__chat__window {
 	flex-grow: 1;
+	overflow-y: scroll;
 }
 
 .main__message__container {
@@ -94,4 +95,8 @@ video {
 .messages {
 	color: white;
 	list-style: none;
+}
+
+.unmute {
+	color: crimson;
 }
